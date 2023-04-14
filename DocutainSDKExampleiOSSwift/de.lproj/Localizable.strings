@@ -1,0 +1,36 @@
+/* 
+  Localizable.strings
+  DocutainSDKExampleiOSSwift
+
+  Created by Marvin Frankenfeld on 15.03.23.
+  
+*/
+
+"title_document_scan" = "Dokumentenscanner";
+"subtitle_document_scan" = "Startet den Dokumentenscanner, der das automatische Scannen von Papierdokumenten ermöglicht.";
+"title_data_extraction" = "Datenextraktion";
+"subtitle_data_extraction" = "Daten extrahieren, z.B. Rechnungsdaten, aus einem zuvor gescannten oder importierten Dokument (PDF oder Bild).";
+"title_text_recognition" = "Texterkennung (OCR)";
+"subtitle_text_recognition" = "Führen Sie OCR für das zuvor gescannte oder importierte Dokument (PDF oder Bild) aus und erhalten Sie den erkannten Text.";
+"title_PDF_generating" = "PDF Dokument erstellen";
+"subtitle_PDF_generating" = "Generieren Sie aus den gescannten Seiten oder dem importierten Bild ein durchsuchbares PDF-Dokument (mit erkanntem Text).";
+"input_option_message" = "Zunächst muss ein Dokument gescannt oder importiert werden.";
+"input_option_scan" = "Dokumentenscanner";
+"input_option_PDF" = "PDF Import";
+"input_option_Image" = "Bild Import";
+"Name1" = "Name 1";
+"Name2" = "Name 2";
+"Name3" = "Name 3";
+"ZipCode" = "Postleitzahl";
+"City" = "Ort";
+"Street" = "Straße";
+"Phone" = "Telefon";
+"CustomerID" = "Kundennummer";
+"IBAN" = "IBAN";
+"BIC" = "BIC";
+"Date" = "Datum";
+"Amount" = "Betrag";
+"InvoiceID" = "Rechnungsnummer";
+"Reference" = "Verwendungszweck";
+"PaymentState" = "Zahlstatus";
+"Cancel" = "Abbrechen";

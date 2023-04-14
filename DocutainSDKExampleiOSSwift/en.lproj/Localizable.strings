@@ -1,0 +1,36 @@
+/* 
+  Localizable.strings
+  DocutainSDKExampleiOSSwift
+
+  Created by Marvin Frankenfeld on 15.03.23.
+  
+*/
+
+"title_document_scan" = "Document Scanner";
+"subtitle_document_scan" = "Starts the document scanner which provides automatic scanning of paper documents.";
+"title_data_extraction" = "Data Extraction";
+"subtitle_data_extraction" = "Extract data, e.g. invoice data, from a previously scanned or imported (PDF or Image) document.";
+"title_text_recognition" = "Text Recognition (OCR)";
+"subtitle_text_recognition" = "Run OCR on the previously scanned or imported (PDF or Image) document and get the recognized text.";
+"title_PDF_generating" = "Generate PDF Document";
+"subtitle_PDF_generating" = "Generate a searchable (includes recognized text) PDF document out of the scanned pages or imported image.";
+"input_option_message" = "First, scan or import a document.";
+"input_option_scan" = "Document Scan";
+"input_option_PDF" = "PDF Import";
+"input_option_Image" = "Image Import";
+"Name1" = "Name 1";
+"Name2" = "Name 2";
+"Name3" = "Name 3";
+"ZipCode" = "Zipcode";
+"City" = "City";
+"Street" = "Street";
+"Phone" = "Phone";
+"CustomerID" = "Customer ID";
+"IBAN" = "IBAN";
+"BIC" = "BIC";
+"Date" = "Date";
+"Amount" = "Amount";
+"InvoiceID" = "Invoice ID";
+"Reference" = "Reference";
+"PaymentState" = "Payment State";
+"Cancel" = "Cancel";

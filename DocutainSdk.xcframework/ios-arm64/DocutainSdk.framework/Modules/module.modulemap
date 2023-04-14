@@ -1,0 +1,11 @@
+framework module DocutainSdk {
+  umbrella header "DocutainSdk.h"
+
+  export *
+  module * { export * }
+}
+
+module DocutainSdk.Swift {
+  header "DocutainSdk-Swift.h"
+  requires objc
+}
