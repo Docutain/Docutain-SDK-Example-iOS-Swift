@@ -1,0 +1,9 @@
+/* 
+  InfoPList.strings
+  DocutainSDKExampleiOSSwift
+
+  Created by Marvin Frankenfeld on 15.03.23.
+  
+*/
+
+"NSCameraUsageDescription" = "In order to scan documents, the app needs access to the camera.";

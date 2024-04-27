@@ -19,19 +19,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         initRootWindow()
         
         //the Docutain SDK needs to be initialized priot to using any functionality of it
-        //a valid license key is required (contact us via [mailto:sdk@Docutain.com] to get a trial license
+        //a valid license key is required, you can generate one on our website https://sdk.docutain.com/TrialLicense?Source=721410
         if(!DocutainSDK.initSDK(licenseKey: licenseKey)){
             //init of Docutain SDK failed, get last error message
             print("InitSDK failed with error: \(DocutainSDK.getLastError())")
             if(licenseKey == "YOUR_LICENSE_KEY_HERE"){
                 showLicenseEmptyInfo()
                 return false
+            } else{
+                showLicenseErrorInfo()
+                return false
             }
         }
         
         if #available(iOS 13.0, *) {
-            //If you want to use text recognition (OCR) and/or data extraction features, you need to set the AnalyzeConfiguration
-            //in order to start all the necessary processes
+            //Reading payment state and BIC when getting the analyzed data is disabled by default
+            //If you want to analyze these 2 fields as well, you need to set the AnalyzeConfig accordingly
+            //A good place to do this, is right after initializing the Docutain SDK
             let analyzeConfig = AnalyzeConfiguration()
             analyzeConfig.readPaymentState = true
             analyzeConfig.readBIC = true
@@ -75,26 +79,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     private func showLicenseEmptyInfo(){
-        let alert = UIAlertController(title: "License empty", message: "A valid license key is required. Please contact us via sdk@Docutain.com to get a trial license.", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Get license", style: .default, handler: {_ in
-            let email = "sdk@Docutain.com"
-            let subject = "Trial License Request"
-            if let mailURLString = "mailto:\(email)?subject=\(subject)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-                   let mailURL = URL(string: mailURLString) {
-                    if UIApplication.shared.canOpenURL(mailURL) {
-                        UIApplication.shared.open(mailURL)
-                    } else {
-                        print("Mail can not be opened")
-                    }
-            } else{
-                print("Mail can not be opened")
+        let alert = UIAlertController(title: "License empty", message: "A valid license key is required. Please click \"Get License\" in order to create a free trial license key on our website.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Get License", style: .default, handler: {_ in
+            if let url = URL(string: "https://sdk.docutain.com/TrialLicense?Source=721410") {
+                UIApplication.shared.open(url, completionHandler: {_ in
+                    exit(0)
+                })
             }
             self.window?.isUserInteractionEnabled = false
         }))
-        alert.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: {_ in
-            exit(0)
+        window?.rootViewController?.present(alert, animated: true)
+    }
+    
+    private func showLicenseErrorInfo(){
+        let alert = UIAlertController(title: "License error", message: "A valid license key is required. Please contact our support to get an extended trial license.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Contact Support", style: .default, handler: {_ in
+            self.sendEmailToSupport(completion: {
+                exit(0)
+            })
         }))
         window?.rootViewController?.present(alert, animated: true)
+    }
+    
+    func sendEmailToSupport(completion: @escaping () -> Void) {
+        let mailtoString = "mailto:support.sdk@Docutain.com?subject=Trial License Error&body=Please keep your following trial license key in this e-mail: \(licenseKey)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        let mailtoUrl = URL(string: mailtoString!)!
+        if UIApplication.shared.canOpenURL(mailtoUrl) {
+            UIApplication.shared.open(mailtoUrl) { success in
+                completion()
+            }
+        }
     }
 }
 

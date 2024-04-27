@@ -20,7 +20,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         var itemType: ItemType
     }
     
-    let listItems : [ListItem] = [ListItem](arrayLiteral: ListItem(title: "title_document_scan".localized(), icon: "DocumentScanner", subtitle: "subtitle_document_scan".localized(), itemType: ItemType.documentScan), ListItem(title: "title_data_extraction".localized(), icon: "DataExtraction", subtitle: "subtitle_data_extraction".localized(), itemType: ItemType.dataExtraction), ListItem(title: "title_text_recognition".localized(), icon: "OCR", subtitle: "subtitle_text_recognition".localized(), itemType: ItemType.textRecognition), ListItem(title: "title_PDF_generating".localized(), icon: "PDF", subtitle: "subtitle_PDF_generating".localized(), itemType: ItemType.pdfGenerating))
+    let listItems : [ListItem] = [ListItem](arrayLiteral: ListItem(title: "title_document_scan".localized(), icon: "DocumentScanner", subtitle: "subtitle_document_scan".localized(), itemType: ItemType.documentScan), ListItem(title: "title_data_extraction".localized(), icon: "DataExtraction", subtitle: "subtitle_data_extraction".localized(), itemType: ItemType.dataExtraction), ListItem(title: "title_text_recognition".localized(), icon: "OCR", subtitle: "subtitle_text_recognition".localized(), itemType: ItemType.textRecognition), ListItem(title: "title_PDF_generating".localized(), icon: "PDF", subtitle: "subtitle_PDF_generating".localized(), itemType: ItemType.pdfGenerating), ListItem(title: "title_settings".localized(), icon: "Settings", subtitle: "subtitle_settings".localized(), itemType: ItemType.settings))
        
     let cellReuseIdentifier = "cell"
     let tableView = UITableView()
@@ -31,15 +31,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         case dataExtraction
         case textRecognition
         case pdfGenerating
+        case settings
     }
     
     private var selectedOption = ItemType.none
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        
+
         navigationItem.backButtonTitle = ""
         title = "Docutain SDK Example"
         
@@ -65,16 +64,65 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     private func startScan(){
         //define a DocumentScannerConfiguration to alter the scan process and define a custom theme to match your branding
+        let scanConfig = getScanConfig()
+        //start the scanner using the provided config
+        UI.scanDocument(scanDelegate: self, scanConfig: scanConfig)
+    }
+    
+    private func getScanConfig(imageImport: Bool = false) ->DocumentScannerConfiguration{
+        
+        //There are a lot of settings to configure the scanner to match your specific needs
+        //Check out the documentation to learn more https://docs.docutain.com/docs/iOS/docScan#change-default-scan-behaviour
+        
         let scanConfig = DocumentScannerConfiguration()
-        scanConfig.allowCaptureModeSetting = true //defaults to false
-        scanConfig.pageEditConfig.allowPageFilter = true //defaults to true
-        scanConfig.pageEditConfig.allowPageRotation = true //defaults to true
+        
+        if(imageImport){
+            if #available(iOS 14, *) {
+                scanConfig.source = .galleryMultiple
+            } else {
+                // Fallback on earlier versions
+                scanConfig.source = .gallery
+            }
+        }
+        
+        //In this sample app we provide a settings page which the user can use to alter the scan settings
+        //The settings are stored in and read from "DocutainPreferences"
+        //This is supposed to be just an example, you do not need to implement it in that exact way
+        //If you do not want to provide your users the possibility to alter the settings themselves at all
+        //You can just set the settings according to the apps needs
+        
+        //set scan settings
+        scanConfig.allowCaptureModeSetting = DocutainPreferences.AllowCaptureModeSetting
+        scanConfig.autoCapture = DocutainPreferences.AutoCapture
+        scanConfig.autoCrop = DocutainPreferences.AutoCrop
+        scanConfig.multiPage = DocutainPreferences.MultiPage
+        scanConfig.defaultScanFilter = DocutainPreferences.DefaultScanFilter
+        
+        //set edit settings
+        scanConfig.pageEditConfig.allowPageFilter = DocutainPreferences.AllowPageFilter
+        scanConfig.pageEditConfig.allowPageRotation = DocutainPreferences.AllowPageRotation
+        scanConfig.pageEditConfig.allowPageCropping = DocutainPreferences.AllowPageCropping
+        scanConfig.pageEditConfig.allowPageArrangement = DocutainPreferences.AllowPageArrangement
+        scanConfig.pageEditConfig.pageArrangementShowPageNumber = DocutainPreferences.PageArrangementShowPageNumber
+        scanConfig.pageEditConfig.pageArrangementShowDeleteButton = DocutainPreferences.PageArrangementShowDeleteButton
+        
+        //set color settings
+        scanConfig.colorConfig.setColorPrimary(light: DocutainPreferences.ColorPrimary.light, dark: DocutainPreferences.ColorPrimary.dark)
+        scanConfig.colorConfig.setColorSecondary(light: DocutainPreferences.ColorSecondary.light, dark: DocutainPreferences.ColorSecondary.dark)
+        scanConfig.colorConfig.setColorOnSecondary(light: DocutainPreferences.ColorOnSecondary.light, dark: DocutainPreferences.ColorOnSecondary.dark)
+        scanConfig.colorConfig.setColorScanButtonsLayoutBackground(light: DocutainPreferences.ColorScanButtonsLayoutBackground.light, dark: DocutainPreferences.ColorScanButtonsLayoutBackground.dark)
+        scanConfig.colorConfig.setColorScanButtonsForeground(light: DocutainPreferences.ColorScanButtonsForeground.light, dark: DocutainPreferences.ColorScanButtonsForeground.dark)
+        scanConfig.colorConfig.setColorScanPolygon(light: DocutainPreferences.ColorScanPolygon.light, dark: DocutainPreferences.ColorScanPolygon.dark)
+        scanConfig.colorConfig.setColorBottomBarBackground(light: DocutainPreferences.ColorBottomBarBackground.light, dark: DocutainPreferences.ColorBottomBarBackground.dark)
+        scanConfig.colorConfig.setColorBottomBarForeground(light: DocutainPreferences.ColorBottomBarForeground.light, dark: DocutainPreferences.ColorBottomBarForeground.dark)
+        scanConfig.colorConfig.setColorTopBarBackground(light: DocutainPreferences.ColorTopBarBackground.light, dark: DocutainPreferences.ColorTopBarBackground.dark)
+        scanConfig.colorConfig.setColorTopBarForeground(light: DocutainPreferences.ColorTopBarForeground.light, dark: DocutainPreferences.ColorTopBarForeground.dark)
+        
         //alter the onboarding image source if you like
         //scanConfig.onboardingImageSource = ...
         
         //detailed information about theming possibilities can be found here [https://docs.docutain.com/docs/iOS/theming]
-        scanConfig.colorConfig.setColorSecondary(light: UIColor(named: "Primary")!, dark: UIColor(named: "Primary")!)
-        UI.scanDocument(scanDelegate: self, scanConfig: scanConfig)
+        return scanConfig
     }
     
     private func startPDFImport(){
@@ -85,18 +133,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     private func startImageImport(){
-        if #available(iOS 14.0, *) {
-            var configuration = PHPickerConfiguration(photoLibrary: .shared())
-            configuration.filter = PHPickerFilter.any(of: [.images])
-            configuration.preferredAssetRepresentationMode = .compatible
-            configuration.selectionLimit = 1
-            let picker = PHPickerViewController(configuration: configuration)
-            picker.delegate = self
-            present(picker, animated: true)
-        } else {
-            //TODO: implement image picker for iOS < 14
-            print("No image picker implementation for iOS < 14 currently available. If you want to test it for iOS < 14, please implement image picker yourself here.")
-        }
+        //define a DocumentScannerConfiguration to alter the scan process and define a custom theme to match your branding
+        let scanConfig = getScanConfig(imageImport: true)
+        //start the scanner using the provided config
+        UI.scanDocument(scanDelegate: self, scanConfig: scanConfig)
     }
     
     private func startDataExtraction(){
@@ -113,6 +153,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     private func showInputOptionAlert(){
         let alert = UIAlertController(title: "Info", message: "input_option_message".localized(), preferredStyle: .actionSheet)
+        if let popoverController = alert.popoverPresentationController{
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
         alert.addAction(UIAlertAction(title: "input_option_scan".localized(), style: .default, handler: {_ in
             self.startScan()
         }))
@@ -223,6 +268,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             case ItemType.pdfGenerating:
                 selectedOption = ItemType.pdfGenerating
                 startPDFGenerating()
+            case ItemType.settings:
+                selectedOption = ItemType.none
+                navigationController!.pushViewController(ViewControllerSettings(), animated: true)
             default:
                 selectedOption = ItemType.none
                 print("Invalid item selected")

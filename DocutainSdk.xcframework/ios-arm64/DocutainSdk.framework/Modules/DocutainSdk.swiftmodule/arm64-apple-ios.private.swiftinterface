@@ -1,133 +1,202 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.7.1 (swiftlang-5.7.1.135.3 clang-1400.0.29.51)
+// swift-compiler-version: Apple Swift version 5.9.2 (swiftlang-5.9.2.2.56 clang-1500.1.0.2.5)
 // swift-module-flags: -target arm64-apple-ios11.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name DocutainSdk
 // swift-module-flags-ignorable: -enable-bare-slash-regex
 import AVFoundation
 import CoreVideo
+import DeveloperToolsSupport
 @_exported import DocutainSdk
 import Foundation
 import PDFKit
 import Photos
+import PhotosUI
 import Swift
 import SwiftUI
 import UIKit
 import Vision
 import _Concurrency
 import _StringProcessing
-@_hasMissingDesignatedInitializers public class DocutainSDK {
-  public static func initSDK(licenseKey: Swift.String) -> Swift.Bool
-  public static func version() -> Swift.Int
-  public static func pageCount() -> Swift.Int
-  public static func getLastError() -> Swift.String
-  public static func getLastErrorCode() -> DocutainSdk.DocutainError
-  public static func deleteTempFiles(deleteTraceFileContent: Swift.Bool) -> Swift.Bool
+import _SwiftConcurrencyShims
+@_inheritsConvenienceInitializers @objc public class DocutainSDK : ObjectiveC.NSObject {
+  @objc public static func initSDK(licenseKey: Swift.String) -> Swift.Bool
+  @objc override public static func version() -> Swift.Int
+  @objc public static func getLastError() -> Swift.String
+  @objc public static func getLastErrorCode() -> DocutainSdk.DocutainError
+  @objc public static func deleteTempFiles(deleteTraceFileContent: Swift.Bool) -> Swift.Bool
+  @objc override dynamic public init()
   @objc deinit
 }
-@_hasMissingDesignatedInitializers @available(iOS 13.0, *)
-public class DocumentDataReader {
-  public static func loadFile(fileUrl: Foundation.URL, password: Swift.String? = nil) -> Swift.Bool
-  public static func getText(pageNumber: Swift.Int32 = -1) -> Swift.String
-  public static func setAnalyzeConfiguration(analyzeConfiguration: DocutainSdk.AnalyzeConfiguration) -> Swift.Bool
-  public static func analyze() -> Swift.String
+@_inheritsConvenienceInitializers @available(iOS 13.0, *)
+@objc public class DocumentDataReader : ObjectiveC.NSObject {
+  @objc public static func loadFile(fileUrl: Foundation.URL, password: Swift.String? = nil) -> Swift.Bool
+  @objc public static func getText(pageNumber: Swift.Int32 = -1) -> Swift.String
+  @objc public static func setAnalyzeConfiguration(analyzeConfiguration: DocutainSdk.AnalyzeConfiguration) -> Swift.Bool
+  @objc public static func analyze() -> Swift.String
+  @objc override dynamic public init()
   @objc deinit
 }
-public protocol ScanDelegate : AnyObject {
-  func didFinishScan(withResult: Swift.Bool)
+@objc public protocol ScanDelegate : ObjectiveC.NSObjectProtocol {
+  @objc func didFinishScan(withResult: Swift.Bool)
 }
-public class DocumentScannerConfiguration {
-  public var allowCaptureModeSetting: Swift.Bool
-  public var pageEditConfig: DocutainSdk.PageEditConfiguration
-  public var colorConfig: DocutainSdk.ColorConfiguration
-  public var onboardingImageSource: Swift.String?
-  public init()
+@_inheritsConvenienceInitializers @objc public class DocumentScannerConfiguration : ObjectiveC.NSObject {
+  @objc public var allowCaptureModeSetting: Swift.Bool
+  @objc public var autoCapture: Swift.Bool {
+    @objc get
+    @objc set(value)
+  }
+  @objc public var defaultScanFilter: DocutainSdk.ScanFilter {
+    @objc get
+    @objc set(value)
+  }
+  @objc public var pageEditConfig: DocutainSdk.PageEditConfiguration
+  @objc public var colorConfig: DocutainSdk.ColorConfiguration
+  @objc public var onboardingImageSource: Swift.String?
+  @objc public var source: DocutainSdk.Source
+  @objc public var sourceImages: [Foundation.URL]
+  @objc public var autoCrop: Swift.Bool
+  @objc public var multiPage: Swift.Bool
+  @objc override dynamic public init()
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Logger {
-  public enum Level : Swift.UInt32 {
-    case disable
-    case assert
-    case error
-    case warning
-    case info
-    case debug
-    case verbose
+@objc public enum ScanFilter : Swift.Int {
+  case auto = 0
+  case gray = 1
+  case blackWhite = 2
+  case original = 3
+  case text = 4
+  case auto2 = 5
+  case illustration = 8
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public enum Source : Swift.Int {
+  case camera = 0
+  case image = 1
+  case gallery = 2
+  @available(iOS 14, *)
+  case galleryMultiple = 3
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@_inheritsConvenienceInitializers @objc public class Logger : ObjectiveC.NSObject {
+  @objc public enum Level : Swift.UInt32 {
+    case disable = 0
+    case assert = 1
+    case error = 2
+    case warning = 3
+    case info = 4
+    case debug = 5
+    case verbose = 6
     public init?(rawValue: Swift.UInt32)
     public typealias RawValue = Swift.UInt32
     public var rawValue: Swift.UInt32 {
       get
     }
   }
-  public static func setLogLevel(level: DocutainSdk.Logger.Level)
-  public static func getTraceFile() -> Swift.String
+  @objc public static func setLogLevel(level: DocutainSdk.Logger.Level)
+  @objc public static func getTraceFile() -> Swift.String
+  @objc override dynamic public init()
   @objc deinit
 }
-public class AnalyzeConfiguration {
-  public var readBIC: Swift.Bool {
-    get
-    set
+@_inheritsConvenienceInitializers @objc public class AnalyzeConfiguration : ObjectiveC.NSObject {
+  @objc public var readBIC: Swift.Bool {
+    @objc get
+    @objc set
   }
-  public var readPaymentState: Swift.Bool {
-    get
-    set
+  @objc public var readPaymentState: Swift.Bool {
+    @objc get
+    @objc set
   }
-  public init()
+  @objc override dynamic public init()
   @objc deinit
 }
-public enum DocutainError : Swift.UInt32 {
-  case noError
-  case fileIO
-  case dataNotValid
-  case passwordNotValid
+@objc public enum DocutainError : Swift.UInt32 {
+  case noError = 0
+  case fileIO = 1
+  case dataNotValid = 7
+  case passwordNotValid = 12
   public init?(rawValue: Swift.UInt32)
   public typealias RawValue = Swift.UInt32
   public var rawValue: Swift.UInt32 {
     get
   }
 }
-@_hasMissingDesignatedInitializers public class ColorConfiguration {
-  public func setColorPrimary(light: UIKit.UIColor, dark: UIKit.UIColor)
-  public func setColorSecondary(light: UIKit.UIColor, dark: UIKit.UIColor)
-  public func setColorOnSecondary(light: UIKit.UIColor, dark: UIKit.UIColor)
-  public func setColorScanButtonsLayoutBackground(light: UIKit.UIColor, dark: UIKit.UIColor)
-  public func setColorScanButtonsForeground(light: UIKit.UIColor, dark: UIKit.UIColor)
-  public func setColorScanPolygon(light: UIKit.UIColor, dark: UIKit.UIColor)
-  public func setColorBottomBarBackground(light: UIKit.UIColor, dark: UIKit.UIColor)
-  public func setcolorBottomBarForeground(light: UIKit.UIColor, dark: UIKit.UIColor)
-  public func setColorTopBarBackground(light: UIKit.UIColor, dark: UIKit.UIColor)
-  public func setcolorTopBarForeground(light: UIKit.UIColor, dark: UIKit.UIColor)
+@_inheritsConvenienceInitializers @objc public class ColorConfiguration : ObjectiveC.NSObject {
+  @objc public func setColorPrimary(light: UIKit.UIColor, dark: UIKit.UIColor)
+  @objc public func setColorSecondary(light: UIKit.UIColor, dark: UIKit.UIColor)
+  @objc public func setColorOnSecondary(light: UIKit.UIColor, dark: UIKit.UIColor)
+  @objc public func setColorScanButtonsLayoutBackground(light: UIKit.UIColor, dark: UIKit.UIColor)
+  @objc public func setColorScanButtonsForeground(light: UIKit.UIColor, dark: UIKit.UIColor)
+  @objc public func setColorScanPolygon(light: UIKit.UIColor, dark: UIKit.UIColor)
+  @objc public func setColorBottomBarBackground(light: UIKit.UIColor, dark: UIKit.UIColor)
+  @objc public func setColorBottomBarForeground(light: UIKit.UIColor, dark: UIKit.UIColor)
+  @objc public func setColorTopBarBackground(light: UIKit.UIColor, dark: UIKit.UIColor)
+  @objc public func setColorTopBarForeground(light: UIKit.UIColor, dark: UIKit.UIColor)
+  @objc override dynamic public init()
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class UI {
-  public static func scanDocument(scanDelegate: DocutainSdk.ScanDelegate, scanConfig: DocutainSdk.DocumentScannerConfiguration)
+@_inheritsConvenienceInitializers @objc public class UI : ObjectiveC.NSObject {
+  @objc public static func scanDocument(scanDelegate: any DocutainSdk.ScanDelegate, scanConfig: DocutainSdk.DocumentScannerConfiguration)
+  @objc override dynamic public init()
   @objc deinit
 }
-public class PageEditConfiguration {
-  public var allowPageRotation: Swift.Bool
-  public var allowPageFilter: Swift.Bool
-  public init()
+@_inheritsConvenienceInitializers @objc public class PageEditConfiguration : ObjectiveC.NSObject {
+  @objc public var allowPageRotation: Swift.Bool
+  @objc public var allowPageFilter: Swift.Bool
+  @objc public var allowPageCropping: Swift.Bool
+  @objc public var allowPageArrangement: Swift.Bool
+  @objc public var pageArrangementShowDeleteButton: Swift.Bool
+  @objc public var pageArrangementShowPageNumber: Swift.Bool
+  @objc override dynamic public init()
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Document {
-  public enum PDFPageFormat : Swift.Int {
-    case FitToPages
-    case A4
-    case A4Landscape
-    case A5
-    case A5Landscape
-    case Letter
-    case LetterLandscape
-    case Legal
-    case LegalLandscape
+@_inheritsConvenienceInitializers @objc public class Document : ObjectiveC.NSObject {
+  @objc public enum PDFPageFormat : Swift.Int {
+    case FitToPages = 0
+    case A4 = 1
+    case A4Landscape = 2
+    case A5 = 3
+    case A5Landscape = 4
+    case Letter = 5
+    case LetterLandscape = 6
+    case Legal = 7
+    case LegalLandscape = 8
     public init?(rawValue: Swift.Int)
     public typealias RawValue = Swift.Int
     public var rawValue: Swift.Int {
       get
     }
   }
-  public static func writePDF(fileUrl: Foundation.URL, fileName: Swift.String, overwrite: Swift.Bool = true, pageFormat: DocutainSdk.Document.PDFPageFormat = .FitToPages) -> Foundation.URL?
-  public static func loadFile(fileUrl: Foundation.URL) -> Swift.Bool
+  @objc public enum PageSourceType : Swift.Int {
+    case original = 0
+    case cutFilter = 1
+    case cutOnly = 2
+    public init?(rawValue: Swift.Int)
+    public typealias RawValue = Swift.Int
+    public var rawValue: Swift.Int {
+      get
+    }
+  }
+  @objc public static func writePDF(fileUrl: Foundation.URL, fileName: Swift.String, overwrite: Swift.Bool = true, pageFormat: DocutainSdk.Document.PDFPageFormat = .FitToPages) -> Foundation.URL?
+  @objc public static func writeImage(page: Swift.Int, fileUrl: Foundation.URL) -> Foundation.URL?
+  @objc public static func getImage(page: Swift.Int, pageSourceType: DocutainSdk.Document.PageSourceType = .cutFilter) -> Foundation.NSData?
+  @objc public static func loadFile(fileUrl: Foundation.URL) -> Swift.Bool
+  @objc public static func pageCount() -> Swift.Int
+  @objc override dynamic public init()
   @objc deinit
 }
+extension DocutainSdk.ScanFilter : Swift.Equatable {}
+extension DocutainSdk.ScanFilter : Swift.Hashable {}
+extension DocutainSdk.ScanFilter : Swift.RawRepresentable {}
+extension DocutainSdk.Source : Swift.Equatable {}
+extension DocutainSdk.Source : Swift.Hashable {}
+extension DocutainSdk.Source : Swift.RawRepresentable {}
 extension DocutainSdk.Logger.Level : Swift.Equatable {}
 extension DocutainSdk.Logger.Level : Swift.Hashable {}
 extension DocutainSdk.Logger.Level : Swift.RawRepresentable {}
@@ -137,3 +206,6 @@ extension DocutainSdk.DocutainError : Swift.RawRepresentable {}
 extension DocutainSdk.Document.PDFPageFormat : Swift.Equatable {}
 extension DocutainSdk.Document.PDFPageFormat : Swift.Hashable {}
 extension DocutainSdk.Document.PDFPageFormat : Swift.RawRepresentable {}
+extension DocutainSdk.Document.PageSourceType : Swift.Equatable {}
+extension DocutainSdk.Document.PageSourceType : Swift.Hashable {}
+extension DocutainSdk.Document.PageSourceType : Swift.RawRepresentable {}
